@@ -1,5 +1,8 @@
 package com.ocr.john.topquiz.controller;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,9 +15,12 @@ import com.ocr.john.topquiz.model.Question;
 import com.ocr.john.topquiz.model.QuestionBank;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener{
 
+    // variable de classe publique
+    public static final String BUNDLE_EXTRA_SCORE = "BUNDLE_EXTRA_SCORE";
 
     private TextView mQuestionText;
     private Button mAnswer1Button;
@@ -23,11 +29,23 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private Button mAnswer4Button;
 
     private QuestionBank mQuestionBank;
+    private Question mCurrentQuestion;
+
+    // nb max of questions
+    private int mNumberOfQuestions;
+
+    // Score :
+    private int mScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        mNumberOfQuestions = 4;
+
+        // on rempli la liste de questions / réponses.
+        mQuestionBank = this.generateQuestions();
 
         mQuestionText = (TextView) findViewById(R.id.activity_game_question_text);
         mAnswer1Button = (Button) findViewById(R.id.activity_game_answer1_btn);
@@ -35,7 +53,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         mAnswer3Button = (Button) findViewById(R.id.activity_game_answer3_btn);
         mAnswer4Button = (Button) findViewById(R.id.activity_game_answer4_btn);
 
-
+        // Use the tag property to 'name' the buttons
+        mAnswer1Button.setTag(0);
+        mAnswer2Button.setTag(1);
+        mAnswer3Button.setTag(2);
+        mAnswer4Button.setTag(3);
         // Use the same listener for the four buttons.
 // The tag value will be used to distinguish the button triggered
         mAnswer1Button.setOnClickListener(this);
@@ -43,14 +65,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         mAnswer3Button.setOnClickListener(this);
         mAnswer4Button.setOnClickListener(this);
 
-// Use the tag property to 'name' the buttons
-        mAnswer1Button.setTag(0);
-        mAnswer2Button.setTag(1);
-        mAnswer3Button.setTag(2);
-        mAnswer4Button.setTag(3);
 
 
-        mQuestionBank = this.generateQuestions();
+
+
+        // We display the random question/answer :
+        this.displayQuestion(mQuestionBank.getQuestion());
+
     }
 
     private QuestionBank generateQuestions() {
@@ -84,6 +105,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private void displayQuestion(final Question question) {
         // Set the text for the question text view and the four buttons
         mQuestionText.setText(question.getQuestion());
+        //for(String ll : question.getChoiceList()) {
+        //    mAnswer1Button.setText(ll);
+        //}
         mAnswer1Button.setText(question.getChoiceList().get(0));
         mAnswer2Button.setText(question.getChoiceList().get(1));
         mAnswer3Button.setText(question.getChoiceList().get(2));
@@ -93,7 +117,36 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+
+        if (--mNumberOfQuestions == 0) {
+            // No question left, end the game
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("Well done!")
+                    .setMessage("Your score is " + mScore)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            // new Intent to tell the main activity about an extra parameter !
+                            Intent intent = new Intent();
+                            intent.putExtra(BUNDLE_EXTRA_SCORE, mScore);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    })
+                    .create()
+                    .show();
+        } else {
+            mCurrentQuestion = mQuestionBank.getQuestion();
+            displayQuestion(mCurrentQuestion);
+        }
+
+
         int responseIndex = (int) view.getTag();
+
+        // Youpi we made it with this question :
+        mScore++;
         Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
     }
 }

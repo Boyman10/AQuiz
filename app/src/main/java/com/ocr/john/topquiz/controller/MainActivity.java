@@ -18,6 +18,9 @@ import com.ocr.john.topquiz.model.User;
  */
 public class MainActivity extends AppCompatActivity {
 
+    // id of activity
+    private static final int GAME_ACTIVITY_REQUEST_CODE = 42;
+
     private TextView mGreetingText;
     private EditText mNameInput;
     private Button mPlayButton;
@@ -67,11 +70,27 @@ public class MainActivity extends AppCompatActivity {
                 // The user just clicked
                 // on démarre une nouvelle activity :
                 Intent gameActivity = new Intent(MainActivity.this, GameActivity.class);
-                startActivity(gameActivity);
+
+                // we call the gameActivity and expect a result
+                //startActivity(gameActivity);
+                startActivityForResult(gameActivity,GAME_ACTIVITY_REQUEST_CODE);
 
                 // on reprend la valeur du champ prénom de l'utilisateur dans notre objet user
                 mUser.setFirstName(mNameInput.getText().toString());
             }
         });
+
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (GAME_ACTIVITY_REQUEST_CODE == requestCode && RESULT_OK == resultCode) {
+            // Fetch the score from the Intent
+            int score = data.getIntExtra(GameActivity.BUNDLE_EXTRA_SCORE, 0);
+        }
     }
 }

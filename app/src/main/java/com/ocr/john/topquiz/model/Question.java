@@ -13,24 +13,49 @@ public class Question {
     private int mAnswerIndex;
 
     public Question(String question, List<String> choiceList, int answerIndex) {
-        mQuestion = question;
-
-        // avons nous au moins une entrée dans la liste ? --- TODO
-        mChoiceList = choiceList;
-
-        // Vérifier sur l'index est compris entre 0 et la taille de la liste. -- TODO
-        mAnswerIndex = answerIndex;
+        this.setQuestion(question);
+        this.setChoiceList(choiceList);
+        this.setAnswerIndex(answerIndex);
     }
 
     public String getQuestion() {
         return mQuestion;
     }
 
+    public void setQuestion(String question) {
+        mQuestion = question;
+    }
+
     public List<String> getChoiceList() {
         return mChoiceList;
     }
 
+    public void setChoiceList(List<String> choiceList) {
+        if (choiceList == null) {
+            throw new IllegalArgumentException("Array cannot be null");
+        }
+
+        mChoiceList = choiceList;
+    }
+
     public int getAnswerIndex() {
         return mAnswerIndex;
+    }
+
+    public void setAnswerIndex(int answerIndex) {
+        if (answerIndex < 0 || answerIndex >= mChoiceList.size()) {
+            throw new IllegalArgumentException("Answer index is out of bound");
+        }
+
+        mAnswerIndex = answerIndex;
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "mQuestion='" + mQuestion + '\'' +
+                ", mChoiceList=" + mChoiceList +
+                ", mAnswerIndex=" + mAnswerIndex +
+                '}';
     }
 }
