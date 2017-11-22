@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AQuiz.iml" filepath="$PROJECT_DIR$/AQuiz.iml" />
-      <module fileurl="file://C:\Users\hackme\Documents\PROG\JEE\MINE\AQuiz\TopQuiz.iml" filepath="C:\Users\hackme\Documents\PROG\JEE\MINE\AQuiz\TopQuiz.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\hackme\Documents\PROG\JEE\MINE\AQuiz\app\app.iml" filepath="C:\Users\hackme\Documents\PROG\JEE\MINE\AQuiz\app\app.iml" />
     </modules>
   </component>
 </project>

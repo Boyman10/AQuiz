@@ -31,4 +31,14 @@
         android:layout_gravity="center_horizontal"
         android:text="Let's play"/>
 
+    <Button
+        android:id="@+id/activity_main_score_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@color/colorAccent"
+        android:layout_margin="50dp"
+        android:text="Scores" />
+
 </LinearLayout>
