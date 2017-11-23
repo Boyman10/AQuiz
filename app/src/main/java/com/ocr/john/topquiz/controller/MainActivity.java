@@ -5,8 +5,11 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +18,13 @@ import android.widget.Toast;
 
 import com.ocr.john.topquiz.R;
 import com.ocr.john.topquiz.model.User;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+// IOUtils library for input stream
+import org.apache.commons.io.IOUtils;
+
 
 /**
  * @author https://openclassrooms.com/courses/developpez-votre-premiere-application-android/gerez-les-elements-graphiques-dans-votre-activite
@@ -26,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     // BUNDLES :
     public static final String BUNDLE_SCORE_BTN = "scoreButton";
+    public static final String BUNDLE_LOG_INFO = "mainActivity";
 
     // constant to preserve constistancy
     public static final String PREF_KEY_FIRSTNAME = "Firstname";
@@ -35,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText mNameInput;
     private Button mPlayButton;
     private Button mScoreButton;
+
+    private TextView mInfoText;
 
     private User mUser;
 
@@ -48,7 +61,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.i("MainActivity","onCreate()");
+        // title of actionbar :
+        setTitle("Hello Guy !");
+        Log.i(BUNDLE_LOG_INFO,"onCreate()");
 
         // initialize the file to save data
         mPreferences = getPreferences(MODE_PRIVATE);
@@ -63,8 +78,29 @@ public class MainActivity extends AppCompatActivity {
         mPlayButton = (Button) findViewById(R.id.activity_main_play_btn);
         mScoreButton = (Button) findViewById(R.id.activity_main_score_btn);
 
+        mInfoText = (TextView) findViewById(R.id.activity_main_info_text);
+
+        // loading content from html resource into textview :
+        final InputStream stream = getResources().openRawResource(R.raw.content);
+        final String text;
+
+        try {
+
+            text = IOUtils.toString(stream);
+
+        } catch (IOException e) {
+
+            Log.i(BUNDLE_LOG_INFO,"Que pasa ?");
+            throw new RuntimeException(e);
+        }
+
+
+
         // on désactive le bouton tant que le champ de texte n est pas saisi
         mPlayButton.setEnabled(false);
+
+        // display the html text :
+        mInfoText.setText(Html.fromHtml(text));
 
         greetUser();
 
@@ -154,10 +190,12 @@ public class MainActivity extends AppCompatActivity {
         if (null != firstname) {
             int score = mPreferences.getInt(PREF_KEY_SCORE, 0);
 
+            // We put some html :
             String fulltext = "Welcome back, " + firstname
-                    + "!\nYour last score was " + score
-                    + ", will you do better this time?";
-            mGreetingText.setText(fulltext);
+                    + "!\n<b>Your last score was " + score
+                    + "</b>, will you do better this time?";
+
+            mGreetingText.setText(Html.fromHtml(fulltext));
             mNameInput.setText(firstname);
             mNameInput.setSelection(firstname.length());
             mPlayButton.setEnabled(true);
@@ -168,34 +206,70 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        Log.i("MainActivity",":onStart()");
+        Log.i(BUNDLE_LOG_INFO,":onStart()");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Log.i("MainActivity","onResume()");
+        Log.i(BUNDLE_LOG_INFO,"onResume()");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        Log.i("MainActivity","onPause()");
+        Log.i(BUNDLE_LOG_INFO,"onPause()");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        Log.i("MainActivity","onStop()");
+        Log.i(BUNDLE_LOG_INFO,"onStop()");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        Log.i("MainActivity","onDestroy()");
+        Log.i(BUNDLE_LOG_INFO,"onDestroy()");
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()) {
+
+            case R.id.action_add:
+                Log.i(BUNDLE_LOG_INFO,"Clicked on menu ADD");
+                return launchListActivity();
+            case R.id.action_edit:
+                Log.i(BUNDLE_LOG_INFO,"Clicked on menu EDIT");
+                return true;
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private boolean launchListActivity () {
+
+        Intent listActivity = new Intent(MainActivity.this, ListActivity.class);
+
+        startActivity(listActivity);
+
+        return true;
+
     }
 }

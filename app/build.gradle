@@ -16,6 +16,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
 }
 
 dependencies {
@@ -25,4 +26,12 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    // retro compatibility
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    // library IOUtils
+    compile 'commons-io:commons-io:2.6'
+    // Recycler view :
+    compile 'com.android.support:recyclerview-v7:26.1.0'
+
 }

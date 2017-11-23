@@ -8,4 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="greeting">
+
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:padding">20dp</item>
+
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
 </resources>
