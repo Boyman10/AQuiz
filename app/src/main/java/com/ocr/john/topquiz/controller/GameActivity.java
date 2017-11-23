@@ -207,9 +207,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 .show();
     }
 
+    // this method is being called each time Android is killing our app
     @Override
     protected void onSaveInstanceState(Bundle outState) {
 
+        // We thus save some data which can be retrieved on next onCreate
         outState.putInt(BUNDLE_STATE_SCORE,mScore);
         outState.putInt(BUNDLE_STATE_QUESTION,mNumberOfQuestions);
 
